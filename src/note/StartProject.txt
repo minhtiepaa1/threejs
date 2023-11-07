@@ -1,0 +1,6 @@
+cài parcel: npm install parcel --save-dev
+cài threejs: npm install three
+run server: npx parcel index.html
+
+// lib for change color
+npm install dat.gui
