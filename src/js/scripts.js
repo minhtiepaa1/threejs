@@ -3,6 +3,8 @@ import * as THREE from "three"
 import {OrbitControls} from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 import * as dat from "dat.gui"
 
+import wormhole from '../../static/wormhole.png'
+import earth from '../../static/earth.jpg'
 //////////////////////////////////////// phần khởi tạo
 
 // trình kết xuất như một công cụ mà 3js sử dụng để phân bổ khoảng trống trên
@@ -101,7 +103,7 @@ const sphereGeometry = new THREE.SphereGeometry(4, 50, 50)
 // standard vật liệu bị ảnh hưởng bởi ánh sáng
 const sphereMaterial = new THREE.MeshStandardMaterial({
     color:0x0000FF,
-    wireframe: false
+    wireframe: false,
 })
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial) // sphere (quả cầu)
 scene.add(sphere)
@@ -166,7 +168,34 @@ scene.fog = new THREE.FogExp2(0xFFFFFF,0.01)
 // trình kết suất === true
 
 // thay nền đen bằng màu khác
-renderer.setClearColor(0xABCDEF);
+// renderer.setClearColor(0xABCDEF);
+// sử dung trình tải kết cấu để tải một hình ảnh và sau đó đặt nó làm nền
+const textureLoader = new THREE.TextureLoader();
+scene.background = textureLoader.load(wormhole);
+
+// sử dụng trình tải kết cấu khối để tạo ảnh 6 hướng 
+// nhưng không tải được có về không load được
+// const cubeTextureLoader = new THREE.CubeTextureLoader();
+// scene.background = cubeTextureLoader.load([
+//     wormhole,
+//     earth,
+//     wormhole,
+//     earth,
+//     earth,
+//     earth,
+// ])
+
+// tạo một khối khác và thay ảnh cho khối đó
+
+const box2Geometry = new THREE.BoxGeometry(10,10,10);
+const box2Material = new THREE.MeshBasicMaterial({
+    // color:0x00FF00,
+    map:textureLoader.load(earth)
+
+})
+const box2 = new THREE.Mesh(box2Geometry, box2Material);
+scene.add(box2);
+box2.position.set(0, 15, 10);
 
 const gui = new dat.GUI();
 
@@ -220,13 +249,13 @@ let step = 0;
 // tự động xoay cho box, vòng lặp chạy liên tục
 function animate(time){
     //time giá trị xoay
-    console.log("time:", time)
+    // console.log("time:", time)
     box.rotation.x = time /1000;
     box.rotation.y = time /1000;
 
     step += options.speed;
    let step1 = 10 * Math.abs(Math.sin(step))
-   console.log("step1:", step1)
+//    console.log("step1:", step1)
     sphere.position.y = 10 * Math.abs(Math.cos(step))
 
     // cunstom độ bóng đổ ánh sáng đèn sân khấu
