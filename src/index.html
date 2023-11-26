@@ -5,11 +5,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learn threejs</title>
+    <style>
+        #popup {
+            display: none;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            opacity: 0.5;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            /* Thêm hiệu ứng chuyển động cho opacity và transform */
+
+            /* Tùy chỉnh kiểu font và màu sắc cho nội dung popup */
+            font-family: 'Arial', sans-serif;
+            color: #333;
+
+            /* Tùy chỉnh hiệu ứng đóng */
+            overflow: hidden;
+            width: 300px;
+            /* Đảm bảo rằng popup có kích thước đủ lớn để thấy rõ hiệu ứng opacity */
+            height: 200px;
+            /* Điều này chỉ là một giả định, điều chỉnh kích thước theo nhu cầu của bạn */
+        }
+
+        /* Nút đóng popup */
+        #closeBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        /* Hiệu ứng cho nút đóng */
+        #closeBtn:hover {
+            color: #ff0000;
+        }
+    </style>
 </head>
 
 <body>
     hello world
-    <script type="module" src="./js/scripts.js"></script>
+    <div id="popup">
+        <span id="closeBtn">&times;</span>
+        <h2>Thông tin đối tượng</h2>
+        <p id="popupContent">Nội dung thông tin sẽ được cập nhật tại đây.</p>
+    </div>
+    <!-- <script type="module" src="./js/scripts.js"></script> -->
+    <script type="module" src="./js/scripTest.js"></script>
 </body>
 
 </html>
