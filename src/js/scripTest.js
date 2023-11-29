@@ -1,4 +1,5 @@
 import * as THREE from "three"
+import * as TWEEN from '@tweenjs/tween.js'
 import {OrbitControls} from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 var scene = new THREE.Scene();
 
@@ -114,10 +115,71 @@ function onMouseMove(event) {
         document.getElementById("popup").style.display = "none";
     }
 }
+/// focus vào obj 
+function onClickFocus(event) {
+    // Chuyển đổi tọa độ chuột sang hệ tọa độ chuẩn
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Gọi phương thức update của OrbitControls để cập nhật trạng thái
+    orbit.update();
+
+    // Cập nhật raycaster
+    raycaster.setFromCamera(mouse, camera);
+
+    // Kiểm tra các đối tượng gặp phải bởi tia
+    var intersects = raycaster.intersectObjects(scene.children);
+
+    // Nếu có đối tượng được click, focus vào đối tượng đó
+    if (intersects.length > 0) {
+        var clickedObject = intersects[0].object;
+        console.log("here", clickedObject)
+        // Di chuyển camera để focus vào đối tượng được click
+        focusOnObject(clickedObject);
+    }
+}
+
+let checkFocus = false;
+function focusOnObject(object) {
+
+    // Gọi phương thức update của OrbitControls để cập nhật trạng thái
+    orbit.update();
+let  newPosition
+    // Tính toán vị trí mới của camera dựa trên vị trí của đối tượng được chọn
+    if (checkFocus === false) {
+        newPosition = object.position.clone().add(new THREE.Vector3(0, 0, 5));
+         // Di chuyển camera lùi ra phía sau đối tượng
+         checkFocus = true;
+    }else{
+        resetCamera()
+        // Di chuyển camera lùi ra phía sau đối tượng
+        checkFocus = false;
+    }
+    
+    // Thực hiện animation để mượt mà chuyển động của camera
+   const test = new TWEEN.Tween(camera.position)
+        .to(newPosition, 1000) // Thời gian di chuyển 1000ms
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+}
+// trở về vị trí cũ trước khi focus
+function resetCamera() {
+    var initialPosition = new THREE.Vector3(-10, 10, 10); // Đặt vị trí ban đầu của camera
+    var currentPosition = camera.position.clone();
+
+    new TWEEN.Tween(currentPosition)
+        .to(initialPosition, 1000)  // Thời gian di chuyển 1000ms
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .onUpdate(function () {
+            camera.position.copy(currentPosition);
+        })
+        .start();
+}
+
 
 // Gán sự kiện click cho cửa sổ
-window.addEventListener('click', onClick);
-window.addEventListener('mousemove', onMouseMove);
+window.addEventListener('click', onClickFocus);
+// window.addEventListener('mousemove', onMouseMove);
 
 //
 // Sự kiện click cho nút đóng popup
@@ -129,6 +191,7 @@ document.getElementById("closeBtn").addEventListener('click', function() {
 // Render loop
 function animate() {
     orbit.update();
+    TWEEN.update();
     requestAnimationFrame(animate);
 // console.log("hello ")
     // Xoay hình cầu
