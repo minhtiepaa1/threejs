@@ -1,5 +1,6 @@
 cài parcel: npm install parcel --save-dev
 cài threejs: npm install three
+npm i @tweenjs/tween.js để focus vào obj
 run server: npx parcel index.html
 npx parcel ./src/index.html
 
